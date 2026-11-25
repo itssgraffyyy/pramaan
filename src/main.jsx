@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
 import Workspace from './Workspace';
+import Analytics from './Analytics';
 
 function App() {
   const [data, setData] = useState(null), [record, setRecord] = useState(null);
@@ -19,8 +20,8 @@ function App() {
     catch (e) { setError(`Unable to open source record. ${e.message}`); }
   }
   const refButton = ref => <button className="ref" key={ref} title={ref} onClick={() => openRecord(ref)}>Row {ref.split(':')[1]} ↗</button>;
-  return <div className="shell"><aside className="sidebar"><div className="brand"><span className="mark">P</span><div><strong>PRAMAAN</strong><small>Evidence intelligence</small></div></div><div className="side-label">WORKSPACE</div><button className={view === 'overview' ? 'nav-button active' : 'nav-button'} onClick={() => setView('overview')}>▦ &nbsp; Overview</button><button className={view === 'cases' ? 'nav-button active' : 'nav-button'} onClick={() => setView('cases')}>▤ &nbsp; Case workspace</button><div className="side-note">● &nbsp; SYNTHETIC DEMO<p>Only synthetic records may be uploaded. No real evidence.</p></div><div className="side-footer">TEAM ARC · PS03</div></aside>
-    <div className="content"><header className="topbar"><div>Investigation workspace <span> / </span> <strong>{view === 'overview' ? 'Overview' : 'Case workspace'}</strong></div><div className="pill">● &nbsp; Synthetic environment</div></header><main>{view === 'cases' ? <Workspace /> : <>
+  return <div className="shell"><aside className="sidebar"><div className="brand"><span className="mark">P</span><div><strong>PRAMAAN</strong><small>Evidence intelligence</small></div></div><div className="side-label">WORKSPACE</div><button className={view === 'overview' ? 'nav-button active' : 'nav-button'} onClick={() => setView('overview')}>▦ &nbsp; Overview</button><button className={view === 'cases' ? 'nav-button active' : 'nav-button'} onClick={() => setView('cases')}>▤ &nbsp; Case workspace</button><button className={view === 'analytics' ? 'nav-button active' : 'nav-button'} onClick={() => setView('analytics')}>⌁ &nbsp; Telecom analytics</button><div className="side-note">● &nbsp; SYNTHETIC DEMO<p>Only synthetic records may be uploaded. No real evidence.</p></div><div className="side-footer">TEAM ARC · PS03</div></aside>
+    <div className="content"><header className="topbar"><div>Investigation workspace <span> / </span> <strong>{view === 'overview' ? 'Overview' : view === 'cases' ? 'Case workspace' : 'Telecom analytics'}</strong></div><div className="pill">● &nbsp; Synthetic environment</div></header><main>{view === 'cases' ? <Workspace /> : view === 'analytics' ? <Analytics /> : <>
       <div className="heading"><div><div className="eyebrow">CASE WORKSPACE &nbsp; / &nbsp; SYNTHETIC DEMO</div><h1>Investigation overview</h1><p>Explore computed communication data and trace findings back to source records.</p></div><button className="primary" onClick={loadDemo} disabled={loading}>{loading ? 'Loading…' : data ? '↻ Reload synthetic demo' : '↓ Load synthetic demo'}</button></div>
       <div className="notice"><strong>Synthetic data only</strong><span>This early prototype is not a secure evidence system. Results require human review.</span></div>
       {error && <div className="error" role="alert">{error}</div>}

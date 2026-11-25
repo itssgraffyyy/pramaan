@@ -4,9 +4,11 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException
 from backend.pramaan_core import contacts, ingest, verify
 from backend.workspace import router as workspace_router
+from backend.analytics import router as analytics_router
 
 app = FastAPI(title="PRAMAAN Synthetic Demo", version="0.1.0")
 app.include_router(workspace_router)
+app.include_router(analytics_router)
 FIXTURES = Path(__file__).resolve().parents[1] / "datasets" / "synthetic"
 FILES = (("operator_a.csv", "cdr_a"), ("operator_b.csv", "cdr_b"), ("ipdr.csv", "ipdr"))
 

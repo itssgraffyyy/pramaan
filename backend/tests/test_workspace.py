@@ -96,6 +96,31 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(result['counts']['quarantined'], 1)
         self.assertTrue(any('timestamp' in issue for issue in result['rows'][0]['issues']))
 
+    def test_case_analytics_ground_truth_and_scope(self):
+        files = [
+            ('a.csv', b'caller,callee,timestamp,duration\nA,B,2026-01-01T23:00:00Z,10\nA,C,2026-01-02T01:00:00Z,30\n'),
+            ('b.csv', b'a_number,b_number,start_time,seconds\nB,A,2026-01-02T01:00:00+00:00,20\nA,D,2026-01-03T12:00:00Z,40\n')]
+        ids = []
+        for name, content in files:
+            item = self.upload(name, 'cdr', content).json(); ids.append(item['id'])
+            self.client.post(self.url + '/evidence/' + item['id'] + '/imports', json={'mapping': item['suggested_mapping']})
+        response = self.client.get(self.url + '/analytics', params={'subject': 'A'})
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        self.assertEqual(result['summary']['calls'], 4)
+        self.assertEqual(result['summary']['total_duration_seconds'], 100)
+        self.assertEqual(result['summary']['average_duration_seconds'], 25)
+        self.assertEqual((result['summary']['outgoing'], result['summary']['incoming'], result['summary']['night_calls']), (3, 1, 3))
+        self.assertEqual([c['contact'] for c in result['common_contacts']], ['B'])
+        for edge in result['edges']:
+            for source in edge['sources']:
+                self.assertEqual(self.client.get(self.url + '/evidence/' + source['file_id'] + '/records/' + str(source['row'])).status_code, 200)
+        filtered = self.client.get(self.url + '/analytics', params=[('file_id', ids[0]), ('start','2026-01-02T00:00:00Z')]).json()
+        self.assertEqual(filtered['summary']['calls'], 1)
+        self.assertEqual(filtered['summary']['total_duration_seconds'], 30)
+        self.assertEqual(self.client.get(self.url + '/analytics', params={'file_id': 'not-in-case'}).status_code, 422)
+        self.assertEqual(self.client.get(self.url + '/analytics', params={'start':'2026-01-01'}).status_code, 422)
+
 
 if __name__ == '__main__':
     unittest.main()
