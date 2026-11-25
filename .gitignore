@@ -5,6 +5,7 @@ __pycache__/
 .venv/
 *-server*.log
 test-results/
+data/
 .env
 .env.*
 !.env.example

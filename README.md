@@ -44,7 +44,9 @@ Run the following in separate terminals:
 npm run dev
 ```
 
-Open http://127.0.0.1:5173 and select **Load synthetic demo**. Vite proxies `/api` to the backend. Run tests with `.\.venv\Scripts\python.exe -m unittest discover -s backend/tests -v` and build the frontend with `npm run build`.
+Open http://127.0.0.1:5173 and select **Load synthetic demo** or **Case workspace**. In the workspace, create a case, upload a synthetic CSV or XLSX file, confirm the suggested column mappings, and select **Verify integrity**. Select a row to inspect its original values. Case history persists in `data/pramaan.sqlite3`; set `PRAMAAN_DB` to use another SQLite file. SQLite is a temporary local development adapter; the planned PostgreSQL adapter is not implemented. The API has no authentication or real-evidence protections. Only use fictional data. Vite proxies `/api` to the backend. Run tests with `.\.venv\Scripts\python.exe -m unittest discover -s backend/tests -v` and build the frontend with `npm run build`.
+
+Uploads are limited to 5 MB and 10,000 records; XLSX imports read the first sheet and reject formulas. Use text cells for identifiers and ISO 8601 timestamps with offsets. XLSX numeric formatting, including leading-zero display formats, is not preserved in the extracted values; the original file bytes are retained. Mapping confirmation cannot establish that an operator's column semantics are correct. The integrity check compares original bytes, row accounting, mappings and ledger entries; it is not proof of authenticity or legal admissibility.
 
 Only synthetic datasets will be used for the hackathon. No live interception or unauthorised access to telecom records. All investigative findings require authorised human review.
 

@@ -1,19 +1,20 @@
 # Implementation status
 
-This is a local synthetic-only web demo, not a deployable investigation system. Do not use real evidence.
+This is a local synthetic-only development application, not a deployable investigation system. Do not use real evidence.
 
 | Requirement | Location | Test | Status | Limitation |
 |---|---|---|---|---|
-| Two synthetic CDR mappings and one IPDR mapping | backend/pramaan_core.py, backend/api.py | backend/tests/test_core.py, backend/tests/test_api.py | In progress | Bundled CSV only; fixed mappings, no uploads or persistence |
-| Row accounting and transformation reconciliation | backend/pramaan_core.py | backend/tests/test_core.py | In progress | In-memory only; no immutable evidence store or independent file hash verification |
+| Persistent synthetic cases and import history | backend/workspace.py, src/Workspace.jsx | backend/tests/test_workspace.py | In progress | SQLite development adapter only; no auth, PostgreSQL or migrations |
+| Two synthetic CDR mappings and one IPDR mapping | backend/workspace.py, src/Workspace.jsx | backend/tests/test_workspace.py | In progress | CSV/XLSX first worksheet; synthetic use is user-attested, not automatically verifiable |
+| Row accounting and transformation reconciliation | backend/workspace.py | backend/tests/test_workspace.py | In progress | Original bytes and import versions protected by SQLite triggers; database owner can alter them; verifier does not independently establish semantic mapping correctness or all validation decisions |
 | Contact aggregation with source references | backend/pramaan_core.py, backend/api.py, src/main.jsx | backend/tests/test_core.py, backend/tests/test_api.py | In progress | Dashboard displays computed counts and original fixture rows; no filters, graph or shared contacts |
-| Synthetic web dashboard | backend/api.py, src/main.jsx | backend/tests/test_api.py, tests/synthetic-demo.spec.js | Tested | Synthetic demo only; no authentication, case handling or real-data functionality |
+| Synthetic web dashboard | backend/api.py, src/main.jsx | backend/tests/test_api.py, tests/synthetic-demo.spec.js | Tested | No authentication or real-data functionality |
 | Authentication, RBAC and case isolation | — | — | Not started | No protected backend exists |
 | Evidence sufficiency, gaps and robustness | backend/pramaan_core.py | backend/tests/test_core.py | In progress | Only a single-file directed contact count; no full rule catalogue or persisted gaps |
 | Finding revalidation and signed replay | — | — | Not started | No versioned findings or signatures |
 | Assistant, reports and review | — | — | Not started | No AI, exports or review workflow |
 | Deployment and browser tests | vite.config.js | tests/synthetic-demo.spec.js | In progress | Local development servers only; one synthetic demo browser journey passed, no complete deployment |
 
-Repeated identical rows are candidates only and are never removed. Missing source ports are retained; no IP correlation is performed. The verifier checks the in-memory representation, not authenticity or admissibility.
+Repeated identical rows are candidates only and are never removed. In uploaded IPDR, missing source ports are quarantined; no IP correlation is performed. The verifier checks stored bytes and reconciliation, not authenticity or admissibility. The database is local and unencrypted, without authentication. XLSX extraction reads the first sheet; numeric display formatting and original cell types are not represented in normalized values. Files are limited to 5 MB and 10,000 records.
 
-Run the synthetic in-memory demonstration with `python backend/demo.py`. It imports eight fixture rows across three files; it is not an upload workflow. The count assessment flags all occurrences of identical source rows as disputed. Its exclusion scenario does not determine whether they are duplicates.
+The original synthetic demo remains available. The case workspace accepts user-confirmed synthetic CSV/XLSX and stores versioned mappings and source references. Backend suite: 12 tests passed, including the six original tests. The frontend production build passed. Two browser tests passed separately: the existing demo and case creation, CSV upload, mapping, verification, source inspection and reopening after a page reload. The stored import was also retrieved and verified after an actual backend restart. The integrity engine and Milestone 2 remain partial: no independent semantic validation of every field, comprehensive malformed-file benchmark, full forensic audit trail, or protected immutable evidence store has been demonstrated.
