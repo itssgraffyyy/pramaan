@@ -27,7 +27,7 @@ The architecture is designed to operate without mandatory external API dependenc
 
 ## Project status
 
-Hackathon proposal / initial development. Application code, setup instructions and demo deployment will be added as development progresses. This repository currently contains documentation only.
+Early development. The React page is a starter and is not connected to a backend. A standard-library Python experiment ingests three synthetic CSV formats and produces referenced contact counts and a limited evidence assessment. Run it from the repository root with `python backend/demo.py`, and run its tests with `python -m unittest discover -s backend/tests -v`. See [implementation status](IMPLEMENTATION_STATUS.md) for limitations and outstanding work. This is not a secure evidence system; do not use real records.
 
 Only synthetic datasets will be used for the hackathon. No live interception or unauthorised access to telecom records. All investigative findings require authorised human review.
 
