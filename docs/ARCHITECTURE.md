@@ -1,3 +1,3 @@
 # Architecture
 
-The current implementation is an isolated Python standard-library ingestion experiment and the original React starter. They are not connected. The intended architecture is a local-first modular FastAPI service, PostgreSQL metadata and protected evidence storage, with deterministic analytics and a React client. Authentication and case isolation must precede any real-data use.
+The current React dashboard calls a synthetic-only FastAPI service through the Vite development proxy. The service reprocesses bundled CSV fixtures in memory; it does not accept uploads or persist cases. The intended architecture includes PostgreSQL metadata and protected evidence storage. Authentication and case isolation must precede any real-data use.

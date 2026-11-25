@@ -27,7 +27,24 @@ The architecture is designed to operate without mandatory external API dependenc
 
 ## Project status
 
-Early development. The React page is a starter and is not connected to a backend. A standard-library Python experiment ingests three synthetic CSV formats and produces referenced contact counts and a limited evidence assessment. Run it from the repository root with `python backend/demo.py`, and run its tests with `python -m unittest discover -s backend/tests -v`. See [implementation status](IMPLEMENTATION_STATUS.md) for limitations and outstanding work. This is not a secure evidence system; do not use real records.
+Early development. The React dashboard connects to a FastAPI synthetic-only backend and shows computed contact counts, validation issues and source records. It has no authentication or protected storage; do not use real records. See [implementation status](IMPLEMENTATION_STATUS.md) for limitations and outstanding work.
+
+From the repository root on Windows, create the environment and install dependencies once:
+
+```powershell
+G:\Python313\python.exe -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
+npm install
+```
+
+Run the following in separate terminals:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn backend.api:app --host 127.0.0.1 --port 8000
+npm run dev
+```
+
+Open http://127.0.0.1:5173 and select **Load synthetic demo**. Vite proxies `/api` to the backend. Run tests with `.\.venv\Scripts\python.exe -m unittest discover -s backend/tests -v` and build the frontend with `npm run build`.
 
 Only synthetic datasets will be used for the hackathon. No live interception or unauthorised access to telecom records. All investigative findings require authorised human review.
 

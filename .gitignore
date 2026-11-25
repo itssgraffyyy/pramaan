@@ -2,6 +2,9 @@ node_modules/
 dist/
 __pycache__/
 *.py[cod]
+.venv/
+*-server*.log
+test-results/
 .env
 .env.*
 !.env.example
